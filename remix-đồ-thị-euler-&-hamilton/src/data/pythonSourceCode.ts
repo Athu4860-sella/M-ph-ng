@@ -1,14 +1,4 @@
-# HƯỚNG DẪN CHẠY TRÊN GOOGLE COLAB:
-# 1. Truy cập https://colab.research.google.com/
-# 2. Tạo một Notebook mới (New Notebook).
-# 3. Tạo một ô mã (Code cell) và dán đoạn mã sau để cài đặt và chạy ngay:
-
-#!pip install -q networkx matplotlib
-
-# Sau đó tải tập tin euler_hamilton.py hoặc dán trực tiếp toàn bộ mã nguồn bên dưới vào và chạy.
-
-
-"""
+export const PYTHON_CLI_CODE = `"""
 =============================================================================
 BÀI TẬP TOÁN RỜI RẠC: NHẬN BIẾT & TÌM CHU TRÌNH EULER - HAMILTON BẰNG PYTHON
 =============================================================================
@@ -448,7 +438,7 @@ def main():
     load_preset_test_case(1, graph)
 
     while True:
-        print("\n" + "=" * 60)
+        print("\\n" + "=" * 60)
         print(" CHƯƠNG TRÌNH NHẬN BIẾT ĐỒ THỊ EULER & HAMILTON (PYTHON)")
         print("=" * 60)
         print(f"[*] Số đỉnh: {len(graph.vertices)} | Số cạnh: {len(graph.edges)}")
@@ -471,7 +461,7 @@ def main():
 
         if choice == "1":
             res = graph.check_euler()
-            print("\n--- KẾT QUẢ KIỂM TRA EULER ---")
+            print("\\n--- KẾT QUẢ KIỂM TRA EULER ---")
             print(f"[!] Kết luận: {res['message']}")
             if res['cycle_or_trail']:
                 print(f"[✓] Thứ tự duyệt: {' -> '.join(res['cycle_or_trail'])}")
@@ -480,7 +470,7 @@ def main():
 
         elif choice == "2":
             res = graph.check_hamilton()
-            print("\n--- KẾT QUẢ KIỂM TRA HAMILTON ---")
+            print("\\n--- KẾT QUẢ KIỂM TRA HAMILTON ---")
             print(f"[!] Kết luận: {res['message']}")
             if res['cycle']:
                 print(f"[✓] Chu trình Hamilton: {' -> '.join(res['cycle'])}")
@@ -490,7 +480,7 @@ def main():
         elif choice == "3":
             res_e = graph.check_euler()
             res_h = graph.check_hamilton()
-            print("\n" + "=" * 50)
+            print("\\n" + "=" * 50)
             print("--- BÁO CÁO TOÀN DIỆN EULER & HAMILTON ---")
             print(f"[EULER]    : {res_e['message']}")
             if res_e['cycle_or_trail']:
@@ -501,7 +491,7 @@ def main():
             print("=" * 50)
 
         elif choice == "4":
-            print("\nNhập danh sách cạnh phân cách bằng dấu phẩy.")
+            print("\\nNhập danh sách cạnh phân cách bằng dấu phẩy.")
             print("Ví dụ: AB, BC, CD, DA hoặc 1-2, 2-3, 3-4, 4-1")
             raw = input("Nhập danh sách cạnh: ").strip()
             if raw:
@@ -534,7 +524,7 @@ def main():
                 print(f"[-] Đã xóa cạnh ({u} - {v})")
 
         elif choice == "7":
-            print("\n--- DANH SÁCH BÀI KIỂM THỬ MẪU (TEST CASES) ---")
+            print("\\n--- DANH SÁCH BÀI KIỂM THỬ MẪU (TEST CASES) ---")
             print("1. Chu trình C4 (Cả Euler & Hamilton)")
             print("2. Hình vuông có 1 đường chéo (Có Hamilton, không Euler)")
             print("3. Có đúng 2 đỉnh bậc lẻ (Đường đi Euler)")
@@ -564,3 +554,121 @@ def main():
 
 if __name__ == "__main__":
     main()
+`;
+
+export const PYTHON_STREAMLIT_CODE = `"""
+=============================================================================
+ỨNG DỤNG STREAMLIT TRỰC QUAN HÓA ĐỒ THỊ EULER & HAMILTON
+=============================================================================
+Cài đặt:
+    pip install streamlit networkx matplotlib
+
+Chạy ứng dụng:
+    streamlit run app_streamlit.py
+"""
+
+import streamlit as st
+import networkx as nx
+import matplotlib.pyplot as plt
+from collections import defaultdict, deque
+
+st.set_page_config(page_title="Đồ Thị Euler & Hamilton", layout="wide")
+
+st.title("🔢 Nhận Biết Đồ Thị Euler & Hamilton (Toán Rời Rạc)")
+st.caption("Xây dựng đồ thị vô hướng, kiểm tra Euler bằng Hierholzer & Hamilton bằng Backtracking")
+
+# Khởi tạo đồ thị trong session state
+if "edges" not in st.session_state:
+    st.session_state.edges = [("A", "B"), ("B", "C"), ("C", "D"), ("D", "A")]
+if "vertices" not in st.session_state:
+    st.session_state.vertices = ["A", "B", "C", "D"]
+
+col1, col2 = st.columns([1, 2])
+
+with col1:
+    st.subheader("🛠️ Chỉnh sửa đồ thị")
+    
+    preset = st.selectbox("Chọn đồ thị mẫu kiểm thử:", [
+        "1. Chu trình C4 (Cả Euler & Hamilton)",
+        "2. Hình vuông có 1 đường chéo (Có Hamilton, không Euler)",
+        "3. Có đúng 2 đỉnh bậc lẻ (Đường đi Euler)",
+        "4. Đồ thị không liên thông",
+        "5. Đồ thị có đỉnh cô lập",
+        "6. Đồ thị không Hamilton (Hình nơ)",
+        "7. Đồ thị cực tiểu (2 đỉnh 1 cạnh)"
+    ])
+    
+    if st.button("Tải đồ thị mẫu"):
+        if "1." in preset:
+            st.session_state.vertices = ["A", "B", "C", "D"]
+            st.session_state.edges = [("A", "B"), ("B", "C"), ("C", "D"), ("D", "A")]
+        elif "2." in preset:
+            st.session_state.vertices = ["A", "B", "C", "D"]
+            st.session_state.edges = [("A", "B"), ("B", "C"), ("C", "D"), ("D", "A"), ("A", "C")]
+        elif "3." in preset:
+            st.session_state.vertices = ["A", "B", "C", "D"]
+            st.session_state.edges = [("A", "B"), ("B", "C"), ("C", "A"), ("D", "A")]
+        elif "4." in preset:
+            st.session_state.vertices = ["A", "B", "C", "D", "E", "F"]
+            st.session_state.edges = [("A", "B"), ("B", "C"), ("C", "A"), ("D", "E"), ("E", "F"), ("F", "D")]
+        elif "5." in preset:
+            st.session_state.vertices = ["A", "B", "C", "D", "E"]
+            st.session_state.edges = [("A", "B"), ("B", "C"), ("C", "D"), ("D", "A")]
+        elif "6." in preset:
+            st.session_state.vertices = ["A", "B", "C", "D", "E"]
+            st.session_state.edges = [("A", "B"), ("B", "C"), ("C", "A"), ("C", "D"), ("D", "E"), ("E", "C")]
+        elif "7." in preset:
+            st.session_state.vertices = ["A", "B"]
+            st.session_state.edges = [("A", "B")]
+        st.rerun()
+
+    edge_input = st.text_input("Nhập danh sách cạnh (VD: AB, BC, CD, DA):")
+    if st.button("Cập nhật từ danh sách cạnh"):
+        tokens = [t.strip() for t in edge_input.replace(';', ',').split(',') if t.strip()]
+        new_edges = []
+        new_verts = set()
+        for tok in tokens:
+            if '-' in tok:
+                p = tok.split('-')
+                if len(p) == 2:
+                    u, v = p[0].strip(), p[1].strip()
+                    new_edges.append((min(u, v), max(u, v)))
+                    new_verts.add(u); new_verts.add(v)
+            elif len(tok) == 2:
+                u, v = tok[0], tok[1]
+                new_edges.append((min(u, v), max(u, v)))
+                new_verts.add(u); new_verts.add(v)
+        if new_edges:
+            st.session_state.vertices = sorted(list(new_verts))
+            st.session_state.edges = list(set(new_edges))
+            st.rerun()
+
+with col2:
+    st.subheader("📊 Hình vẽ & Kết quả phân tích")
+    
+    G = nx.Graph()
+    for v in st.session_state.vertices: G.add_node(v)
+    for u, v in st.session_state.edges: G.add_edge(u, v)
+
+    fig, ax = plt.subplots(figsize=(6, 4))
+    pos = nx.spring_layout(G, seed=42)
+    nx.draw_networkx_nodes(G, pos, ax=ax, node_color="#e0e7ff", node_size=700, edgecolors="#4338ca", linewidths=2)
+    nx.draw_networkx_edges(G, pos, ax=ax, edge_color="#64748b", width=2)
+    nx.draw_networkx_labels(G, pos, ax=ax, font_size=11, font_weight="bold")
+    ax.axis("off")
+    st.pyplot(fig)
+
+    # Hiển thị bậc
+    degrees = dict(G.degree())
+    st.write("**Bảng bậc các đỉnh:**", degrees)
+`;
+
+export const GOOGLE_COLAB_INSTRUCTIONS = `# HƯỚNG DẪN CHẠY TRÊN GOOGLE COLAB:
+# 1. Truy cập https://colab.research.google.com/
+# 2. Tạo một Notebook mới (New Notebook).
+# 3. Tạo một ô mã (Code cell) và dán đoạn mã sau để cài đặt và chạy ngay:
+
+!pip install -q networkx matplotlib
+
+# Sau đó tải tập tin euler_hamilton.py hoặc dán trực tiếp toàn bộ mã nguồn bên dưới vào và chạy.
+`;
