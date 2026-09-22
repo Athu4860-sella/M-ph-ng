@@ -142,6 +142,16 @@ export function PythonSourceModal({ isOpen, onClose }: PythonSourceModalProps) {
               <Download className="w-3.5 h-3.5" />
               <span>Tải file .py</span>
             </button>
+
+            <a
+              href="/euler_hamilton_simulation_code.zip"
+              download="euler_hamilton_simulation_code.zip"
+              className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg flex items-center gap-1.5 transition-colors shadow-sm font-semibold"
+              title="Tải trọn gói mã nguồn và báo cáo kết quả mô phỏng dạng tệp ZIP"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Tải trọn bộ (.ZIP)</span>
+            </a>
           </div>
         </div>
 

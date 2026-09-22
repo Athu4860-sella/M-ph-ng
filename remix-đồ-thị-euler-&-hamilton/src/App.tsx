@@ -27,7 +27,9 @@ import {
   Code2, 
   HelpCircle, 
   Target,
-  FolderOpen
+  FolderOpen,
+  Download,
+  FolderArchive
 } from 'lucide-react';
 
 export default function App() {
@@ -443,11 +445,23 @@ export default function App() {
             <button
               onClick={() => setIsPythonModalOpen(true)}
               className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white flex items-center gap-1 transition-colors shadow-xs"
-              title="Tải mã nguồn Python"
+              title="Xem mã nguồn Python chi tiết"
             >
               <Code2 className="w-3.5 h-3.5" />
               <span>Mã Python</span>
             </button>
+
+            {/* Nút Tải Toàn Bộ ZIP */}
+            <a
+              href="/euler_hamilton_simulation_code.zip"
+              download="euler_hamilton_simulation_code.zip"
+              className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white flex items-center gap-1.5 transition-colors shadow-xs"
+              title="Tải gói ZIP đầy đủ mã nguồn (React, TypeScript, Python) và báo cáo kết quả"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Tải ZIP</span>
+              <span className="sm:hidden">ZIP</span>
+            </a>
           </div>
         </div>
       </header>
