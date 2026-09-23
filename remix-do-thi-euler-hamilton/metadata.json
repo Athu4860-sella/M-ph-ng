@@ -1,8 +1,0 @@
-{
-  "name": "Remix Đồ Thị Euler \u0026 Hamilton",
-  "description": "Ứng dụng trực quan hóa và nhận biết đồ thị Euler và Hamilton bằng thuật toán Hierholzer và Quay lui với mô phỏng từng bước.",
-  "requestFramePermissions": [],
-  "majorCapabilities": [
-    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
-  ]
-}
